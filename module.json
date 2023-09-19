@@ -27,6 +27,20 @@
       "path": "languages/en.json"
     }
   ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": [
+          {
+            "minimum": "2.3.1",
+            "verified": "2.3.1"
+          }
+        ]
+      }
+    ]
+  },
   "url": "This is auto replaced",
   "manifest": "This is auto replaced",
   "download": "This is auto replaced",
