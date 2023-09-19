@@ -1,0 +1,79 @@
+#dnd5e-custom-counters-form ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#dnd5e-custom-counters-form li {
+    align-items: center;
+    gap: 0.5em;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+}
+
+#dnd5e-custom-counters-form li {
+    cursor: move;
+}
+
+#dnd5e-custom-counters-form li:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+#dnd5e-custom-counters-form li.dragElem {
+    opacity: 0.4;
+  }
+
+#dnd5e-custom-counters-form li.over {
+    border-top: 2px solid red;
+}
+
+#dnd5e-custom-counters-form .fields {
+    align-items: center;
+    display: flex;
+    gap: 0.75em;
+}
+
+#dnd5e-custom-counters-form .field {
+    align-items: center;
+    display: flex;
+    flex: auto;
+    gap: 0.25em;
+}
+
+#dnd5e-custom-counters-form footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+#dnd5e-custom-counters-form .delete-button {
+    background: transparent;
+    border: none;
+}
+
+#dnd5e-custom-counters-form .delete-button:hover {
+    box-shadow: none;
+}
+
+#dnd5e-custom-counters-form .delete-button.disabled > i {
+    color: transparent;
+}
+
+#dnd5e-custom-counters-form .delete-button:hover > i {
+    text-shadow: 0 0 5px var(--color-shadow-primary);
+    outline: none;
+}
+
+#dnd5e-custom-counters-form .delete-button.disabled:hover > i {
+    text-shadow: none;
+}
+
+#dnd5e-custom-counters-form .new-button {
+    background: rgba(255, 255, 240, 0.8);
+    border: 1px solid var(--color-border-light-primary);
+}
+
+#dnd5e-custom-counters-form .hidden {
+    display: none;
+}

@@ -1,0 +1,44 @@
+<form>
+    <div class="scrollable">
+        <ul class="flexcol counter-list">
+        {{#each counters}}
+            <li class="flexrow counter-item" draggable="true" data-key="{{@key}}">
+                <i class="flex0 fas fa-grip-lines"></i>
+                <div class="fields">
+                    <input id="key" name="key" type="hidden" value="{{@key}}">
+                    <div class="field">
+                        <label>Name</label>
+                        <input{{#if system}} disabled{{/if}} id="name" name="name" type="text" value="{{name}}">
+                    </div>
+                    <div class="field">
+                        <label>Type</label>
+                        <select{{#if system}} disabled{{/if}} id="type" name="type">
+                            {{#select type}}
+                            <option value="checkbox">{{localize "dnd5eCustomCounters.checkbox"}}</option>
+                            <option value="number">{{localize "dnd5eCustomCounters.number"}}</option>
+                            <option value="successFailure">{{localize "dnd5eCustomCounters.successFailure"}}</option>
+                            {{/select}}
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Visible</label>
+                        <input id="visible" name="visible" type="checkbox" {{#if visible}}checked{{/if}}>
+                    </div>
+                </div>
+                <button{{#if system}} disabled{{/if}} type="button" data-tooltip="{{localize "dnd5eCustomCounters.delete.tooltip"}}" data-action="delete" class="flex0 delete-button{{#if system}} disabled{{/if}}">
+                    <i class="fas fa-xmark"></i>
+                </button>
+                <input id="delete" name="delete" type="hidden" value="false">
+            </li>
+        {{/each}}
+        </ul>
+    </div>
+    <footer>
+        <button type="button" data-tooltip="{{localize "dnd5eCustomCounters.new.tooltip"}}" data-action="new" class="new-button">
+            <i class="fas fa-plus"></i>{{localize "dnd5eCustomCounters.new.label"}}
+        </button>
+        <button type="submit" data-tooltip="{{localize "dnd5eCustomCounters.save.tooltip"}}" class="save-button">
+            <i class="fas fa-solid fa-floppy-disk"></i>{{localize "dnd5eCustomCounters.save.label"}}
+        </button>
+    </footer>
+</form>

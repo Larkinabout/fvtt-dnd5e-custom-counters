@@ -1,0 +1,18 @@
+{
+    "dnd5eCustomCounters.checkbox": "Checkbox",
+    "dnd5eCustomCounters.number": "Number",
+    "dnd5eCustomCounters.successFailure": "Success/Failure",
+    "dnd5eCustomCounters.delete.dialog.content": "This will also delete any data for the counter from all actors. Do you wish to continue?",
+    "dnd5eCustomCounters.delete.dialog.title": "Delete Counter",
+    "dnd5eCustomCounters.delete.dialog.yes": "Yes",
+    "dnd5eCustomCounters.delete.dialog.no": "No",
+    "dnd5eCustomCounters.delete.tooltip": "Delete",
+    "dnd5eCustomCounters.new.label": "Create New",
+    "dnd5eCustomCounters.new.tooltip": "Create New",
+    "dnd5eCustomCounters.save.label": "Save and Close",
+    "dnd5eCustomCounters.save.tooltip": "Save and Close",
+    "dnd5eCustomCounters.characterCountersForm.title": "Edit Character Counters",
+    "dnd5eCustomCounters.characterCountersMenu.hint": "Open this menu to edit the custom counters on the default character sheet",
+    "dnd5eCustomCounters.characterCountersMenu.label": "Edit Character Counters",
+    "dnd5eCustomCounters.characterCountersMenu.name": "Edit Character Counters"
+}
