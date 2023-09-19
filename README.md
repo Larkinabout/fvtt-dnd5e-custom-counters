@@ -2,7 +2,7 @@
 
 # D&D 5e Custom Counters
 
-A simple Foundry VTT utility to add custom counters to the default D&D 5e character sheet.
+A Foundry VTT module to add custom counters to the default D&D 5e character sheet.
 
 ![D&D 5e Custom Counters](./.github/readme/dnd5e-custom-counters.png)
 
