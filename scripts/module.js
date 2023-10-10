@@ -59,7 +59,6 @@ function addCounters (app, html, data) {
             }
 
             continue
-            
         }
 
         if (!counter.visible) {
@@ -70,65 +69,59 @@ function addCounters (app, html, data) {
         counterDiv.classList.add('counter', 'flexrow', key)
 
         const h4 = document.createElement('h4')
-        const h4_text = document.createTextNode = counter.name
-        h4.append(h4_text)
+        const h4Text = document.createTextNode(counter.name)
+        h4.append(h4Text)
 
         const counterValueDiv = document.createElement('div')
         counterValueDiv.classList.add('counter-value')
 
         const counterInput1 = document.createElement('input')
         const counterInput2 = document.createElement('input')
-        
+
         switch (counter.type) {
-            case 'checkbox':
-                {
-                    counterInput1.setAttribute('type', 'checkbox')
-                    counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}`)
-                    counterInput1.checked = app.actor.getFlag(MODULE.ID, key) || false
-                    counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, key) || false)
-                    counterInput1.setAttribute('placeholder', 'false')
-                    counterInput1.setAttribute('data-dtype', 'Boolean')
-                }
-                break
-            case 'number':
-                {
-                    counterInput1.setAttribute('type', 'text')
-                    counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}`)
-                    counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, key) || 0)
-                    counterInput1.setAttribute('placeholder', '0')
-                    counterInput1.setAttribute('data-dtype', 'Number')
-                }1
-                break
-            case 'successFailure':
-                {
-                    counterInput1.setAttribute('type', 'text')
-                    counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}.success`)
-                    counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.success`) || 0)
-                    counterInput1.setAttribute('placeholder', '0')
-                    counterInput1.setAttribute('data-dtype', 'Number')
-                    counterInput2.setAttribute('type', 'text')
-                    counterInput2.setAttribute('name', `flags.${MODULE.ID}.${key}.failure`)
-                    counterInput2.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
-                    counterInput2.setAttribute('placeholder', '0')
-                    counterInput2.setAttribute('data-dtype', 'Number')
-                }
-                break
+        case 'checkbox':
+            counterInput1.setAttribute('type', 'checkbox')
+            counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}`)
+            counterInput1.checked = app.actor.getFlag(MODULE.ID, key) || false
+            counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, key) || false)
+            counterInput1.setAttribute('placeholder', 'false')
+            counterInput1.setAttribute('data-dtype', 'Boolean')
+            break
+        case 'number':
+            counterInput1.setAttribute('type', 'text')
+            counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}`)
+            counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, key) || 0)
+            counterInput1.setAttribute('placeholder', '0')
+            counterInput1.setAttribute('data-dtype', 'Number')
+            break
+        case 'successFailure':
+            counterInput1.setAttribute('type', 'text')
+            counterInput1.setAttribute('name', `flags.${MODULE.ID}.${key}.success`)
+            counterInput1.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.success`) || 0)
+            counterInput1.setAttribute('placeholder', '0')
+            counterInput1.setAttribute('data-dtype', 'Number')
+            counterInput2.setAttribute('type', 'text')
+            counterInput2.setAttribute('name', `flags.${MODULE.ID}.${key}.failure`)
+            counterInput2.setAttribute('value', app.actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
+            counterInput2.setAttribute('placeholder', '0')
+            counterInput2.setAttribute('data-dtype', 'Number')
+            break
         }
-       
+
         countersDiv[0].appendChild(counterDiv)
         counterDiv.appendChild(h4)
         counterDiv.appendChild(counterValueDiv)
 
         if (counter.type === 'successFailure') {
-            const i_success = document.createElement('i')
-            const i_failure = document.createElement('i')
+            const iSuccess = document.createElement('i')
+            const iFailure = document.createElement('i')
 
-            i_success.classList.add('fas', 'fa-check')
-            i_failure.classList.add('fas', 'fa-times')
-            
-            counterValueDiv.appendChild(i_success)
+            iSuccess.classList.add('fas', 'fa-check')
+            iFailure.classList.add('fas', 'fa-times')
+
+            counterValueDiv.appendChild(iSuccess)
             counterValueDiv.appendChild(counterInput1)
-            counterValueDiv.appendChild(i_failure)
+            counterValueDiv.appendChild(iFailure)
             counterValueDiv.appendChild(counterInput2)
         } else {
             counterValueDiv.appendChild(counterInput1)
