@@ -1,4 +1,4 @@
-import { CharacterCountersForm } from './form.js'
+import { CharacterCountersForm, NpcCountersForm } from './form.js'
 
 export const MODULE = {
     ID: 'dnd5e-custom-counters'
@@ -23,6 +23,16 @@ function registerSettings () {
         scope: 'world'
     })
 
+    game.settings.registerMenu(MODULE.ID, 'npcCountersMenu', {
+        hint: game.i18n.localize('dnd5eCustomCounters.npcCountersMenu.hint'),
+        label: game.i18n.localize('dnd5eCustomCounters.npcCountersMenu.label'),
+        name: game.i18n.localize('dnd5eCustomCounters.npcCountersMenu.name'),
+        icon: 'fas fa-pen-to-square',
+        type: NpcCountersForm,
+        restricted: false,
+        scope: 'world'
+    })
+
     game.settings.register(MODULE.ID, 'characterCounters', {
         name: 'Character Counters',
         scope: 'world',
@@ -34,20 +44,53 @@ function registerSettings () {
             inspiration: { name: game.i18n.localize('DND5E.Inspiration'), type: 'checkbox', system: true, visible: true }
         }
     })
+
+    game.settings.register(MODULE.ID, 'npcCounters', {
+        name: 'NPC Counters',
+        scope: 'world',
+        config: false,
+        type: Object,
+        default: {
+            legact: { name: game.i18n.localize('DND5E.LegAct'), type: 'successFailure', system: true, visible: true },
+            legres: { name: game.i18n.localize('DND5E.LegRes'), type: 'successFailure', system: true, visible: true },
+            lair: { name: game.i18n.localize('DND5E.LairAct'), type: 'checkbox', system: true, visible: true }
+        }
+    })
 }
 
 function addCounters (app, html, data) {
-    if (app.constructor.name !== 'ActorSheet5eCharacter') {
+    const actorSheetTypes = {
+        ActorSheet5eCharacter: {
+            type: 'character',
+            countersSetting: 'characterCounters'
+        },
+        ActorSheet5eNPC: {
+            type: 'npc',
+            countersSetting: 'npcCounters'
+        }
+    }
+
+    if (!actorSheetTypes[app.constructor.name]) {
         return
     }
 
-    const counters = game.settings.get(MODULE.ID, 'characterCounters')
+    const counters = game.settings.get(MODULE.ID, actorSheetTypes[app.constructor.name].countersSetting)
     const countersDiv = html.find('.counters')
     let lastItem = null
 
     for (const [key, counter] of Object.entries(counters)) {
         if (counter.system) {
-            const currentItem = countersDiv.find(`.${key}`)[0]
+            let currentItem = null
+            switch (key) {
+            case 'legact':
+                currentItem = countersDiv.find('input[name="system.resources.legact.value"]').parent().parent()[0]
+                break
+            case 'legres':
+                currentItem = countersDiv.find('input[name="system.resources.legres.value"]').parent().parent()[0]
+                break
+            default:
+                currentItem = countersDiv.find(`.${key}`)[0]
+            }
 
             if (counter.visible) {
                 if (lastItem) {

@@ -9,7 +9,7 @@ export class CountersForm extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: `${MODULE.ID}-form`,
             template: `modules/${MODULE.ID}/templates/form.hbs`,
-            dragDrop: [{dragSelector: ".counter-item", dropSelector: ".counter-list"}],
+            dragDrop: [{ dragSelector: '.counter-item', dropSelector: '.counter-list' }],
             width: 600,
             height: 'auto',
             closeOnSubmit: true
@@ -28,17 +28,17 @@ export class CountersForm extends FormApplication {
     }
 
     /** @override */
-    _canDragStart(selector) {
-        return true;
+    _canDragStart (selector) {
+        return true
     }
-  
+
     /** @inheritdoc */
-    _canDragDrop(selector) {
-        return true;
+    _canDragDrop (selector) {
+        return true
     }
 
     /** @override */
-    _onDragStart(event) {
+    _onDragStart (event) {
         this.items = Array.from(event.target.closest('.counter-list').querySelectorAll('.counter-item'))
         this.sourceItem = event.target
         this.sourceIndex = this.items.findIndex(item => item.dataset.key === this.sourceItem.dataset.key)
@@ -48,18 +48,18 @@ export class CountersForm extends FormApplication {
     }
 
     /** @override */
-    _onDrop(event) {
+    _onDrop (event) {
         this.sourceItem.style.removeProperty('opacity')
 
         this.targetItem = event.target.closest('li')
         this.targetIndex = this.items.findIndex(item => item.dataset.key === this.targetItem.dataset.key)
-        
+
         if (this.targetIndex < this.sourceIndex) {
             this.targetItem.before(this.sourceItem)
         } else {
             this.targetItem.after(this.sourceItem)
         }
-    } 
+    }
 
     async _handleButtonClick (event) {
         event.preventDefault()
@@ -67,18 +67,18 @@ export class CountersForm extends FormApplication {
         const action = clickedElement.data().action
         const key = clickedElement.parents('li')?.data()?.key
         switch (action) {
-          case 'delete': {
+        case 'delete': {
             await this.#deleteCounter(key)
             break
-          }
-          case 'new': {
+        }
+        case 'new': {
             await this.#createCounter()
             break
-          }
+        }
         }
     }
 
-    async #createCounter () { 
+    async #createCounter () {
         const counterList = this.element[0].querySelector('.counter-list')
 
         const key = randomID()
@@ -99,9 +99,9 @@ export class CountersForm extends FormApplication {
             <div class="field">
                 <label>Type</label>
                 <select id="type" name="type">
-                    <option value="checkbox">${game.i18n.localize("dnd5eCustomCounters.checkbox")}</option>
-                    <option value="number">${game.i18n.localize("dnd5eCustomCounters.number")}</option>
-                    <option value="successFailure">${game.i18n.localize("dnd5eCustomCounters.successFailure")}</option>
+                    <option value="checkbox">${game.i18n.localize('dnd5eCustomCounters.checkbox')}</option>
+                    <option value="number">${game.i18n.localize('dnd5eCustomCounters.number')}</option>
+                    <option value="successFailure">${game.i18n.localize('dnd5eCustomCounters.successFailure')}</option>
                 </select>
             </div>
             <div class="field">
@@ -147,34 +147,33 @@ export class CountersForm extends FormApplication {
                 }
             }
         })
-        d.render(true)  
+        d.render(true)
     }
 
     async _updateObject (event, formData) {
         const counters = {}
 
-        for (let index = 0; index <  Object.keys(formData.name).length; index++) {
+        for (let index = 0; index < Object.keys(formData.name).length; index++) {
             const key = formData.key[index]
 
             if (formData.delete[index] === 'true') {
                 for (const actor of game.actors) {
                     actor.unsetFlag(MODULE.ID, key)
-                } 
+                }
                 continue
             }
-            
+
             const name = formData.name[index]
             const type = formData.type[index]
-            const system = ['death-saves', 'exhaustion', 'inspiration'].includes(key)
+            const system = ['death-saves', 'exhaustion', 'inspiration', 'legact', 'legres', 'lair'].includes(key)
             const visible = formData.visible[index]
 
             counters[key] = { name, type, system, visible }
         }
 
-        await game.settings.set(MODULE.ID, this.countersSetting, counters) 
+        await game.settings.set(MODULE.ID, this.countersSetting, counters)
     }
 }
-
 
 export class CharacterCountersForm extends CountersForm {
     constructor () {
@@ -190,6 +189,24 @@ export class CharacterCountersForm extends CountersForm {
 
     async getData () {
         const counters = game.settings.get(MODULE.ID, 'characterCounters')
+        return { counters }
+    }
+}
+
+export class NpcCountersForm extends CountersForm {
+    constructor () {
+        super()
+        this.countersSetting = 'npcCounters'
+    }
+
+    static get defaultOptions () {
+        return mergeObject(super.defaultOptions, {
+            title: game.i18n.localize('dnd5eCustomCounters.npcCountersForm.title')
+        })
+    }
+
+    async getData () {
+        const counters = game.settings.get(MODULE.ID, 'npcCounters')
         return { counters }
     }
 }

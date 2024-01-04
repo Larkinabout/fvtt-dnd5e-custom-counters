@@ -14,5 +14,9 @@
     "dnd5eCustomCounters.characterCountersForm.title": "Edit Character Counters",
     "dnd5eCustomCounters.characterCountersMenu.hint": "Open this menu to edit the custom counters on the default character sheet",
     "dnd5eCustomCounters.characterCountersMenu.label": "Edit Character Counters",
-    "dnd5eCustomCounters.characterCountersMenu.name": "Edit Character Counters"
+    "dnd5eCustomCounters.characterCountersMenu.name": "Edit Character Counters",
+    "dnd5eCustomCounters.npcCountersForm.title": "Edit NPC Counters",
+    "dnd5eCustomCounters.npcCountersMenu.hint": "Open this menu to edit the custom counters on the default NPC sheet",
+    "dnd5eCustomCounters.npcCountersMenu.label": "Edit NPC Counters",
+    "dnd5eCustomCounters.npcCountersMenu.name": "Edit NPC Counters"
 }
