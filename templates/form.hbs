@@ -25,6 +25,9 @@
                         <input id="visible" name="visible" type="checkbox" {{#if visible}}checked{{/if}}>
                     </div>
                 </div>
+                <a alt="{{localize "dnd5eCustomCounters.copyProperty.tooltip"}}" data-action="copy-property" data-tooltip="{{localize "dnd5eCustomCounters.copyProperty.tooltip"}}" data-tooltip-direction="UP" class="flex0" >
+                    <i class="fa-solid fa-at"></i>
+                </a>
                 <button{{#if system}} disabled{{/if}} type="button" data-tooltip="{{localize "dnd5eCustomCounters.delete.tooltip"}}" data-action="delete" class="flex0 delete-button{{#if system}} disabled{{/if}}">
                     <i class="fas fa-xmark"></i>
                 </button>

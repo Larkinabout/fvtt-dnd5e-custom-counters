@@ -4,6 +4,15 @@ export const MODULE = {
     ID: 'dnd5e-custom-counters'
 }
 
+export const SYSTEM_PROPERTY = {
+    'death-saves': '@attributes.death.success',
+    exhaustion: '@attributes.exhaustion',
+    inspiration: '@attributes.inspiration',
+    legact: '@resources.legact.value',
+    legres: '@resources.legres.value',
+    lair: '@resources.lair.value'
+}
+
 Hooks.on('renderActorSheet', (app, html, data) => {
     addCounters(app, html, data)
 })
@@ -19,7 +28,7 @@ function registerSettings () {
         name: game.i18n.localize('dnd5eCustomCounters.characterCountersMenu.name'),
         icon: 'fas fa-pen-to-square',
         type: CharacterCountersForm,
-        restricted: false,
+        restricted: true,
         scope: 'world'
     })
 
@@ -29,7 +38,7 @@ function registerSettings () {
         name: game.i18n.localize('dnd5eCustomCounters.npcCountersMenu.name'),
         icon: 'fas fa-pen-to-square',
         type: NpcCountersForm,
-        restricted: false,
+        restricted: true,
         scope: 'world'
     })
 

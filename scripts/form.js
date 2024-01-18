@@ -1,4 +1,4 @@
-import { MODULE } from './module.js'
+import { MODULE, SYSTEM_PROPERTY } from './module.js'
 
 export class CountersForm extends FormApplication {
     constructor (...args) {
@@ -66,6 +66,7 @@ export class CountersForm extends FormApplication {
         const clickedElement = $(event.currentTarget)
         const action = clickedElement.data().action
         const key = clickedElement.parents('li')?.data()?.key
+        const type = clickedElement.parent().find('#type').val()
         switch (action) {
         case 'delete': {
             await this.#deleteCounter(key)
@@ -74,6 +75,9 @@ export class CountersForm extends FormApplication {
         case 'new': {
             await this.#createCounter()
             break
+        }
+        case 'copy-property': {
+            this.#copyProperty(key, type)
         }
         }
     }
@@ -109,6 +113,9 @@ export class CountersForm extends FormApplication {
                 <input id="visible" name="visible" type="checkbox">
             </div>
         </div>
+        <a alt="${game.i18n.localize('dnd5eCustomCounters.copyProperty.tooltip')}" data-action="copy-property" data-tooltip="${game.i18n.localize('dnd5eCustomCounters.copyProperty.tooltip')}" data-tooltip-direction="UP" class="flex0" >
+                    <i class="fa-solid fa-at"></i>
+                </a>
         <button type="button" data-tooltip="Delete" data-action="delete" class="flex0 delete-button">
             <i class="fas fa-xmark"></i>
         </button>
@@ -148,6 +155,12 @@ export class CountersForm extends FormApplication {
             }
         })
         d.render(true)
+    }
+
+    #copyProperty (key, type) {
+        const property = SYSTEM_PROPERTY[key] ?? `@flags.${MODULE.ID}.${key}${(type === 'successFailure') ? '.success' : ''}`
+        game.clipboard.copyPlainText(property)
+        ui.notifications.info(game.i18n.format('dnd5eCustomCounters.copyProperty.message', { property }))
     }
 
     async _updateObject (event, formData) {

@@ -2,6 +2,8 @@
     "dnd5eCustomCounters.checkbox": "Checkbox",
     "dnd5eCustomCounters.number": "Number",
     "dnd5eCustomCounters.successFailure": "Success/Failure",
+    "dnd5eCustomCounters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
+    "dnd5eCustomCounters.copyProperty.tooltip": "Copy Property to Clipboard",
     "dnd5eCustomCounters.delete.dialog.content": "This will also delete any data for the counter from all actors. Do you wish to continue?",
     "dnd5eCustomCounters.delete.dialog.title": "Delete Counter",
     "dnd5eCustomCounters.delete.dialog.yes": "Yes",
