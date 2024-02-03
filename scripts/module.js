@@ -14,7 +14,33 @@ export const SYSTEM_PROPERTY = {
 }
 
 Hooks.on('renderActorSheet', (app, html, data) => {
-    addCounters(app, html, data)
+    const actorSheetTypes = {
+        ActorSheet5eCharacter: {
+            type: 'character',
+            countersSetting: 'characterCounters',
+            legacy: true
+        },
+        ActorSheet5eCharacter2: {
+            type: 'character',
+            countersSetting: 'characterCounters',
+            legacy: false
+        },
+        ActorSheet5eNPC: {
+            type: 'npc',
+            countersSetting: 'npcCounters',
+            legacy: true
+        }
+    }
+
+    const actorSheetType = actorSheetTypes[app.constructor.name]
+
+    if (!actorSheetType) return
+
+    if (actorSheetType.legacy) {
+        addCountersLegacy(app, html, data, actorSheetType)
+    } else {
+        addCounters(app, html, data, actorSheetType)
+    }
 })
 
 Hooks.on('ready', async () => {
@@ -67,23 +93,148 @@ function registerSettings () {
     })
 }
 
-function addCounters (app, html, data) {
-    const actorSheetTypes = {
-        ActorSheet5eCharacter: {
-            type: 'character',
-            countersSetting: 'characterCounters'
-        },
-        ActorSheet5eNPC: {
-            type: 'npc',
-            countersSetting: 'npcCounters'
+function addCounters (app, html, data, actorSheetType) {
+    const actor = app.actor
+    const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
+    const detailsRightDiv = html[0].querySelector('.tab.details > .right')
+    const detailsRightTopDiv = detailsRightDiv.querySelector('.top')
+    const countersDiv = createCountersDiv()
+    const ul = document.createElement('ul')
+    countersDiv.appendChild(ul)
+    detailsRightTopDiv.after(countersDiv)
+
+    for (const [key, counter] of Object.entries(counters)) {
+        if (counter.system) {
+            continue
         }
-    }
 
-    if (!actorSheetTypes[app.constructor.name]) {
-        return
-    }
+        if (!counter.visible) {
+            continue
+        }
 
-    const counters = game.settings.get(MODULE.ID, actorSheetTypes[app.constructor.name].countersSetting)
+        let li = null
+
+        switch (counter.type) {
+        case 'checkbox':
+            li = createCheckbox(actor, key, counter)
+            break
+        case 'number':
+            li = createNumber(actor, key, counter)
+            break
+        case 'successFailure':
+            li = createSuccessFailure(actor, key, counter)
+            break
+        }
+
+        ul.appendChild(li)
+    }
+}
+
+function createCountersDiv () {
+    const div = document.createElement('div')
+    div.classList.add('dnd5e-custom-counters-counters')
+
+    const h3 = document.createElement('h3')
+    h3.setAttribute('class', 'icon')
+    div.appendChild(h3)
+
+    const i = document.createElement('i')
+    i.classList.add('fas', 'fa-scroll')
+    h3.appendChild(i)
+
+    const span = document.createElement('span')
+    span.setAttribute('class', 'roboto-upper')
+    span.textContent = game.i18n.localize('dnd5eCustomCounters.counters')
+    h3.appendChild(span)
+
+    return div
+}
+
+function createCheckbox (actor, key, counter) {
+    const li = document.createElement('li')
+    li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
+
+    const label = document.createElement('label')
+    label.setAttribute('class', 'flexrow')
+    li.appendChild(label)
+
+    const h4 = document.createElement('h4')
+    h4.textContent = counter.name
+    label.appendChild(h4)
+
+    const input = document.createElement('input')
+    input.setAttribute('type', 'checkbox')
+    input.setAttribute('name', `flags.${MODULE.ID}.${key}`)
+    input.checked = actor.getFlag(MODULE.ID, key) || false
+    input.setAttribute('value', actor.getFlag(MODULE.ID, key) || false)
+    input.setAttribute('placeholder', 'false')
+    input.setAttribute('data-dtype', 'Boolean')
+    label.appendChild(input)
+
+    return li
+}
+
+function createNumber (actor, key, counter) {
+    const li = document.createElement('li')
+    li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
+    const h4 = document.createElement('h4')
+    h4.textContent = counter.name
+    li.appendChild(h4)
+    const div = document.createElement('div')
+    div.setAttribute('class', 'dnd5e-custom-counters-counter-value')
+    li.appendChild(div)
+    const input = document.createElement('input')
+    input.setAttribute('type', 'text')
+    input.setAttribute('name', `flags.${MODULE.ID}.${key}`)
+    input.setAttribute('value', actor.getFlag(MODULE.ID, key) || 0)
+    input.setAttribute('placeholder', '0')
+    input.setAttribute('data-dtype', 'Number')
+    div.appendChild(input)
+
+    return li
+}
+
+function createSuccessFailure (actor, key, counter) {
+    const li = document.createElement('li')
+    li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
+
+    const h4 = document.createElement('h4')
+    h4.textContent = counter.name
+    li.appendChild(h4)
+
+    const div = document.createElement('div')
+    div.classList.add('dnd5e-custom-counters-counter-value', 'flexrow', key)
+    li.appendChild(div)
+
+    const iSuccess = document.createElement('i')
+    iSuccess.classList.add('fas', 'fa-check')
+    div.appendChild(iSuccess)
+
+    const inputSuccess = document.createElement('input')
+    inputSuccess.setAttribute('type', 'text')
+    inputSuccess.setAttribute('name', `flags.${MODULE.ID}.${key}.success`)
+    inputSuccess.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.success`) || 0)
+    inputSuccess.setAttribute('placeholder', '0')
+    inputSuccess.setAttribute('data-dtype', 'Number')
+    div.appendChild(inputSuccess)
+
+    const iFailure = document.createElement('i')
+    iFailure.classList.add('fas', 'fa-times')
+    div.appendChild(iFailure)
+
+    const inputFailure = document.createElement('input')
+    inputFailure.setAttribute('type', 'text')
+    inputFailure.setAttribute('name', `flags.${MODULE.ID}.${key}.failure`)
+    inputFailure.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
+    inputFailure.setAttribute('placeholder', '0')
+    inputFailure.setAttribute('data-dtype', 'Number')
+    div.appendChild(inputFailure)
+
+    return li
+}
+
+function addCountersLegacy (app, html, data, actorSheetType) {
+    const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
     const countersDiv = html.find('.counters')
     let lastItem = null
 

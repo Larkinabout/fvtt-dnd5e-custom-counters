@@ -35,7 +35,7 @@
         "compatibility": [
           {
             "minimum": "2.3.1",
-            "verified": "2.4.1"
+            "verified": "3.0.1"
           }
         ]
       }
