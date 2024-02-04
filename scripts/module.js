@@ -47,6 +47,9 @@ Hooks.on('ready', async () => {
     registerSettings()
 })
 
+/**
+ * Register module settings
+ */
 function registerSettings () {
     game.settings.registerMenu(MODULE.ID, 'characterCountersMenu', {
         hint: game.i18n.localize('dnd5eCustomCounters.characterCountersMenu.hint'),
@@ -93,6 +96,13 @@ function registerSettings () {
     })
 }
 
+/**
+ * Add counters to the sheet
+ * @param {object} app            The app
+ * @param {object} html           The HTML
+ * @param {object} data           The data
+ * @param {string} actorSheetType The actor sheet type
+ */
 function addCounters (app, html, data, actorSheetType) {
     const actor = app.actor
     const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
@@ -101,11 +111,12 @@ function addCounters (app, html, data, actorSheetType) {
     const countersDiv = createCountersDiv()
     const ul = document.createElement('ul')
     countersDiv.appendChild(ul)
-    detailsRightTopDiv.after(countersDiv)
 
     for (const [key, counter] of Object.entries(counters)) {
         if (counter.system) {
-            continue
+            if (!counter.visible) {
+                removeSystemCounter(html, key)
+            }
         }
 
         if (!counter.visible) {
@@ -124,12 +135,80 @@ function addCounters (app, html, data, actorSheetType) {
         case 'successFailure':
             li = createSuccessFailure(actor, key, counter)
             break
+        case 'fraction':
+            li = createFraction(actor, key, counter)
         }
 
         ul.appendChild(li)
     }
+
+    // Only add section if there are visible counters
+    if (Object.values(counters).some(c => !c.system && c.visible)) {
+        detailsRightTopDiv.after(countersDiv)
+    }
 }
 
+/**
+ * Remove the system counter
+ * @param {object} html The HTML
+ * @param {string} key  The counter key
+ */
+function removeSystemCounter (html, key) {
+    switch (key) {
+    case 'death-saves':
+        removeDeathSaves(html)
+        break
+    case 'exhaustion':
+        removeExhaustion(html)
+        break
+    case 'inspiration':
+        removeInspiration(html)
+        break
+    }
+}
+
+/**
+ * Remove Death Saves
+ * @param {object} html The HTML
+ */
+function removeDeathSaves (html) {
+    const deathTray = html[0].querySelector('.death-tray')
+    if (deathTray) {
+        deathTray.style.display = 'none'
+    }
+}
+
+/**
+ * Remove Exhaustion
+ * @param {object} html The HTML
+ */
+function removeExhaustion (html) {
+    const exhaustion = html[0].querySelectorAll('[data-prop="system.attributes.exhaustion"]')
+    exhaustion.forEach(e => e.remove())
+    const ac = html[0].querySelector('.ac')
+    if (ac) {
+        ac.style.marginTop = '-41px'
+        ac.style.width = '100%'
+    }
+    const lozenges = html[0].querySelector('.lozenges')
+    if (lozenges) {
+        lozenges.style.marginTop = '-15px'
+    }
+}
+
+/**
+ * Remove Inspiration
+ * @param {object} html The HTML
+ */
+function removeInspiration (html) {
+    const button = html[0].querySelector('button.inspiration')
+    button?.remove()
+}
+
+/**
+ * Create the Counters section
+ * @returns {object} The DIV
+ */
 function createCountersDiv () {
     const div = document.createElement('div')
     div.classList.add('dnd5e-custom-counters-counters')
@@ -150,6 +229,13 @@ function createCountersDiv () {
     return div
 }
 
+/**
+ * Create a checkbox counter
+ * @param {object} actor   The actor
+ * @param {string} key     The counter key
+ * @param {object} counter The counter
+ * @returns {object}       The LI
+ */
 function createCheckbox (actor, key, counter) {
     const li = document.createElement('li')
     li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
@@ -174,6 +260,56 @@ function createCheckbox (actor, key, counter) {
     return li
 }
 
+/**
+ * Create a fraction counter
+ * @param {object} actor   The actor
+ * @param {string} key     The counter key
+ * @param {object} counter The counter
+ * @returns {object}       The LI
+ */
+function createFraction (actor, key, counter) {
+    const li = document.createElement('li')
+    li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
+
+    const h4 = document.createElement('h4')
+    h4.textContent = counter.name
+    li.appendChild(h4)
+
+    const div = document.createElement('div')
+    div.classList.add('dnd5e-custom-counters-counter-value', 'flexrow', key)
+    li.appendChild(div)
+
+    const inputValue = document.createElement('input')
+    inputValue.setAttribute('type', 'text')
+    inputValue.setAttribute('name', `flags.${MODULE.ID}.${key}.value`)
+    inputValue.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.value`) || 0)
+    inputValue.setAttribute('placeholder', '0')
+    inputValue.setAttribute('data-dtype', 'Number')
+    div.appendChild(inputValue)
+
+    const span = document.createElement('span')
+    span.classList.add('dnd5d-custom-counters-separator')
+    span.textContent = '/'
+    div.appendChild(span)
+
+    const inputMax = document.createElement('input')
+    inputMax.setAttribute('type', 'text')
+    inputMax.setAttribute('name', `flags.${MODULE.ID}.${key}.max`)
+    inputMax.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.max`) || 0)
+    inputMax.setAttribute('placeholder', '0')
+    inputMax.setAttribute('data-dtype', 'Number')
+    div.appendChild(inputMax)
+
+    return li
+}
+
+/**
+ * Create a number counter
+ * @param {object} actor   The actor
+ * @param {string} key     The counter key
+ * @param {object} counter The counter
+ * @returns {object}       The LI
+ */
 function createNumber (actor, key, counter) {
     const li = document.createElement('li')
     li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
@@ -194,6 +330,13 @@ function createNumber (actor, key, counter) {
     return li
 }
 
+/**
+ * Create a success/failure counter
+ * @param {object} actor   The actor
+ * @param {string} key     The counter key
+ * @param {object} counter The counter
+ * @returns {object}       The LI
+ */
 function createSuccessFailure (actor, key, counter) {
     const li = document.createElement('li')
     li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
@@ -233,6 +376,13 @@ function createSuccessFailure (actor, key, counter) {
     return li
 }
 
+/**
+ * Add counters to the legacy sheet
+ * @param {object} app            The app
+ * @param {object} html           The HTML
+ * @param {object} data           The data
+ * @param {string} actorSheetType The actor sheet type
+ */
 function addCountersLegacy (app, html, data, actorSheetType) {
     const counters = game.settings.get(MODULE.ID, actorSheetType.countersSetting)
     const countersDiv = html.find('.counters')

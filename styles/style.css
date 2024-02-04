@@ -109,3 +109,12 @@
     font-size: var(--font-size-14);
     justify-content: center;
 }
+
+.dnd5d-custom-counters-separator {
+    align-items: center;
+    display: flex;
+    flex: 0.25;
+    font-size: var(--font-size-18);
+    font-weight: bold;
+    justify-content: center;
+}

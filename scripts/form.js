@@ -104,6 +104,7 @@ export class CountersForm extends FormApplication {
                 <label>Type</label>
                 <select id="type" name="type">
                     <option value="checkbox">${game.i18n.localize('dnd5eCustomCounters.checkbox')}</option>
+                    <option value="fraction">${game.i18n.localize('dnd5eCustomCounters.fraction')}</option>
                     <option value="number">${game.i18n.localize('dnd5eCustomCounters.number')}</option>
                     <option value="successFailure">${game.i18n.localize('dnd5eCustomCounters.successFailure')}</option>
                 </select>
@@ -158,7 +159,7 @@ export class CountersForm extends FormApplication {
     }
 
     #copyProperty (key, type) {
-        const property = SYSTEM_PROPERTY[key] ?? `@flags.${MODULE.ID}.${key}${(type === 'successFailure') ? '.success' : ''}`
+        const property = SYSTEM_PROPERTY[key] ?? `@flags.${MODULE.ID}.${key}${(type === 'successFailure') ? '.success' : (type === 'fraction') ? '.value' : ''}`
         game.clipboard.copyPlainText(property)
         ui.notifications.info(game.i18n.format('dnd5eCustomCounters.copyProperty.message', { property }))
     }

@@ -1,6 +1,7 @@
 {
     "dnd5eCustomCounters.counters": "Counters",
     "dnd5eCustomCounters.checkbox": "Checkbox",
+    "dnd5eCustomCounters.fraction": "Fraction",
     "dnd5eCustomCounters.number": "Number",
     "dnd5eCustomCounters.successFailure": "Success/Failure",
     "dnd5eCustomCounters.copyProperty.message": "'Property \"{property}\" copied to clipboard.'",
