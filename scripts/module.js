@@ -434,7 +434,7 @@ function addCountersLegacy (app, html, data, actorSheetType) {
             continue
         }
 
-        if (!counter.visible) {
+        if (!counter.visible || counter.type === 'fraction') {
             continue
         }
 
