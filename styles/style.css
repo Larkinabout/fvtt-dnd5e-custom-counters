@@ -104,6 +104,12 @@
     width: 100%;
 }
 
+.dnd5e-custom-counters-counter a {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
 .dnd5e-custom-counters-counter i {
     align-items: center;
     display: flex;

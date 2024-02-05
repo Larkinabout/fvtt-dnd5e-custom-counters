@@ -246,8 +246,11 @@ function createCheckbox (actor, key, counter) {
     li.appendChild(label)
 
     const h4 = document.createElement('h4')
-    h4.textContent = counter.name
     label.appendChild(h4)
+
+    const a = document.createElement('a')
+    a.textContent = counter.name
+    h4.appendChild(a)
 
     const input = document.createElement('input')
     input.setAttribute('type', 'checkbox')
@@ -273,8 +276,13 @@ function createFraction (actor, key, counter) {
     li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
 
     const h4 = document.createElement('h4')
-    h4.textContent = counter.name
     li.appendChild(h4)
+
+    const a = document.createElement('a')
+    a.textContent = counter.name
+    a.addEventListener('click', () => decreaseFraction(actor, key))
+    a.addEventListener('contextmenu', () => increaseFraction(actor, key))
+    h4.appendChild(a)
 
     const div = document.createElement('div')
     div.classList.add('dnd5e-custom-counters-counter-value', 'dnd5e-custom-counters-fraction', key)
@@ -321,8 +329,14 @@ function createNumber (actor, key, counter) {
     const li = document.createElement('li')
     li.classList.add('dnd5e-custom-counters-counter', 'flexrow', key)
     const h4 = document.createElement('h4')
-    h4.textContent = counter.name
     li.appendChild(h4)
+
+    const a = document.createElement('a')
+    a.textContent = counter.name
+    a.addEventListener('click', () => { increaseNumber(actor, key) })
+    a.addEventListener('contextmenu', () => decreaseNumber(actor, key))
+    h4.appendChild(a)
+
     const div = document.createElement('div')
     div.classList.add('dnd5e-custom-counters-counter-value', 'dnd5e-custom-counters-number')
     li.appendChild(div)
@@ -357,9 +371,14 @@ function createSuccessFailure (actor, key, counter) {
     div.classList.add('dnd5e-custom-counters-counter-value', 'dnd5e-custom-counters-success-failure', key)
     li.appendChild(div)
 
+    const aSuccess = document.createElement('a')
+    aSuccess.addEventListener('click', () => increaseSuccess(actor, key))
+    aSuccess.addEventListener('contextmenu', () => decreaseSuccess(actor, key))
+    div.appendChild(aSuccess)
+
     const iSuccess = document.createElement('i')
     iSuccess.classList.add('fas', 'fa-check')
-    div.appendChild(iSuccess)
+    aSuccess.appendChild(iSuccess)
 
     const inputSuccess = document.createElement('input')
     inputSuccess.setAttribute('type', 'text')
@@ -370,9 +389,14 @@ function createSuccessFailure (actor, key, counter) {
     inputSuccess.addEventListener('click', event => selectInputContent(event))
     div.appendChild(inputSuccess)
 
+    const aFailure = document.createElement('a')
+    aFailure.addEventListener('click', () => increaseFailure(actor, key))
+    aFailure.addEventListener('contextmenu', () => decreaseFailure(actor, key))
+    div.appendChild(aFailure)
+
     const iFailure = document.createElement('i')
     iFailure.classList.add('fas', 'fa-times')
-    div.appendChild(iFailure)
+    aFailure.appendChild(iFailure)
 
     const inputFailure = document.createElement('input')
     inputFailure.setAttribute('type', 'text')
@@ -394,6 +418,57 @@ function selectInputContent (event) {
     const input = event.target
     input.select()
     input.focus()
+}
+
+function decreaseFraction (actor, key) {
+    const value = actor.getFlag(MODULE.ID, `${key}.value`)
+    if (value) {
+        actor.setFlag(MODULE.ID, `${key}.value`, value - 1)
+    }
+}
+
+function increaseFraction (actor, key) {
+    const value = actor.getFlag(MODULE.ID, `${key}.value`) || 0
+    const max = actor.getFlag(MODULE.ID, `${key}.max`) || 0
+    if (value < max) {
+        actor.setFlag(MODULE.ID, `${key}.value`, value + 1)
+    }
+}
+
+function decreaseNumber (actor, key) {
+    const value = actor.getFlag(MODULE.ID, key)
+    if (value) {
+        actor.setFlag(MODULE.ID, key, value - 1)
+    }
+}
+
+function increaseNumber (actor, key) {
+    const value = actor.getFlag(MODULE.ID, key) || 0
+    actor.setFlag(MODULE.ID, key, value + 1)
+}
+
+function decreaseSuccess (actor, key) {
+    const value = actor.getFlag(MODULE.ID, `${key}.success`)
+    if (value) {
+        actor.setFlag(MODULE.ID, `${key}.success`, value - 1)
+    }
+}
+
+function increaseSuccess (actor, key) {
+    const value = actor.getFlag(MODULE.ID, `${key}.success`) || 0
+    actor.setFlag(MODULE.ID, `${key}.success`, value + 1)
+}
+
+function decreaseFailure (actor, key) {
+    const value = actor.getFlag(MODULE.ID, `${key}.failure`)
+    if (value) {
+        actor.setFlag(MODULE.ID, `${key}.failure`, value - 1)
+    }
+}
+
+function increaseFailure (actor, key) {
+    const value = actor.getFlag(MODULE.ID, `${key}.failure`) || 0
+    actor.setFlag(MODULE.ID, `${key}.failure`, value + 1)
 }
 
 /**
