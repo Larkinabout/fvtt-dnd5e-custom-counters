@@ -117,6 +117,7 @@ function addCounters (app, html, data, actorSheetType) {
             if (!counter.visible) {
                 removeSystemCounter(html, key)
             }
+            continue
         }
 
         if (!counter.visible) {
@@ -276,8 +277,12 @@ function createFraction (actor, key, counter) {
     li.appendChild(h4)
 
     const div = document.createElement('div')
-    div.classList.add('dnd5e-custom-counters-counter-value', 'flexrow', key)
+    div.classList.add('dnd5e-custom-counters-counter-value', 'dnd5e-custom-counters-fraction', key)
     li.appendChild(div)
+
+    const divGroup = document.createElement('div')
+    divGroup.classList.add('dnd5e-custom-counters-fraction-group', key)
+    div.appendChild(divGroup)
 
     const inputValue = document.createElement('input')
     inputValue.setAttribute('type', 'text')
@@ -285,12 +290,13 @@ function createFraction (actor, key, counter) {
     inputValue.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.value`) || 0)
     inputValue.setAttribute('placeholder', '0')
     inputValue.setAttribute('data-dtype', 'Number')
-    div.appendChild(inputValue)
+    inputValue.addEventListener('click', event => selectInputContent(event))
+    divGroup.appendChild(inputValue)
 
     const span = document.createElement('span')
     span.classList.add('dnd5d-custom-counters-separator')
     span.textContent = '/'
-    div.appendChild(span)
+    divGroup.appendChild(span)
 
     const inputMax = document.createElement('input')
     inputMax.setAttribute('type', 'text')
@@ -298,7 +304,8 @@ function createFraction (actor, key, counter) {
     inputMax.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.max`) || 0)
     inputMax.setAttribute('placeholder', '0')
     inputMax.setAttribute('data-dtype', 'Number')
-    div.appendChild(inputMax)
+    inputMax.addEventListener('click', event => selectInputContent(event))
+    divGroup.appendChild(inputMax)
 
     return li
 }
@@ -317,7 +324,7 @@ function createNumber (actor, key, counter) {
     h4.textContent = counter.name
     li.appendChild(h4)
     const div = document.createElement('div')
-    div.setAttribute('class', 'dnd5e-custom-counters-counter-value')
+    div.classList.add('dnd5e-custom-counters-counter-value', 'dnd5e-custom-counters-number')
     li.appendChild(div)
     const input = document.createElement('input')
     input.setAttribute('type', 'text')
@@ -325,6 +332,7 @@ function createNumber (actor, key, counter) {
     input.setAttribute('value', actor.getFlag(MODULE.ID, key) || 0)
     input.setAttribute('placeholder', '0')
     input.setAttribute('data-dtype', 'Number')
+    input.addEventListener('click', event => selectInputContent(event))
     div.appendChild(input)
 
     return li
@@ -346,7 +354,7 @@ function createSuccessFailure (actor, key, counter) {
     li.appendChild(h4)
 
     const div = document.createElement('div')
-    div.classList.add('dnd5e-custom-counters-counter-value', 'flexrow', key)
+    div.classList.add('dnd5e-custom-counters-counter-value', 'dnd5e-custom-counters-success-failure', key)
     li.appendChild(div)
 
     const iSuccess = document.createElement('i')
@@ -359,6 +367,7 @@ function createSuccessFailure (actor, key, counter) {
     inputSuccess.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.success`) || 0)
     inputSuccess.setAttribute('placeholder', '0')
     inputSuccess.setAttribute('data-dtype', 'Number')
+    inputSuccess.addEventListener('click', event => selectInputContent(event))
     div.appendChild(inputSuccess)
 
     const iFailure = document.createElement('i')
@@ -371,9 +380,20 @@ function createSuccessFailure (actor, key, counter) {
     inputFailure.setAttribute('value', actor.getFlag(MODULE.ID, `${key}.failure`) || 0)
     inputFailure.setAttribute('placeholder', '0')
     inputFailure.setAttribute('data-dtype', 'Number')
+    inputFailure.addEventListener('click', event => selectInputContent(event))
     div.appendChild(inputFailure)
 
     return li
+}
+
+/**
+ * Select content of an input
+ * @param {object} event The event
+ */
+function selectInputContent (event) {
+    const input = event.target
+    input.select()
+    input.focus()
 }
 
 /**

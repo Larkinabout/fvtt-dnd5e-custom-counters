@@ -81,7 +81,7 @@
 .dnd5e-custom-counters-counters ul {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
     margin: 0;
     max-width: calc(var(--skills-col-width) + 100px);
     min-width: var(--skills-col-width);
@@ -97,15 +97,17 @@
 }
 
 .dnd5e-custom-counters-counter input {
-    font-size: var(--font-size-12);
+    background-color: unset;
+    font-size: var(--font-size-14);
     font-weight: bold;
     text-align: center;
     width: 100%;
 }
 
-.dnd5e-custom-counters-counter-value i {
+.dnd5e-custom-counters-counter i {
     align-items: center;
     display: flex;
+    color: var(--dnd5e-color-gold);
     font-size: var(--font-size-14);
     justify-content: center;
 }
@@ -114,7 +116,62 @@
     align-items: center;
     display: flex;
     flex: 0.25;
+    color: var(--dnd5e-color-gold);
     font-size: var(--font-size-18);
     font-weight: bold;
     justify-content: center;
 }
+
+.dnd5e-custom-counters-fraction {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr 0.75fr 1.25fr;
+}
+
+.dnd5e-custom-counters-fraction-group {
+    background-color: var(--dnd5e-color-parchment);
+    border: 1px solid var(--color-border-light-tertiary);
+    border-radius: 3px;
+    display: grid;
+    grid-column-start: 2;
+    grid-template-columns: 1.25fr 0.75fr 1.25fr;
+    grid-column-end: 5;
+
+}
+
+.dnd5e-custom-counters-fraction-group > input {
+    background-color: unset;
+    border: 0;
+    border-radius: 0;
+}
+
+.dnd5e-custom-counters-number {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr 0.75fr 1.25fr;
+}
+
+.dnd5e-custom-counters-number > input {
+    background-color: var(--dnd5e-color-parchment);
+}
+
+.dnd5e-custom-counters-success-failure {
+    background-color: var(--dnd5e-color-parchment);
+    border: 1px solid var(--color-border-light-tertiary);
+    border-radius: 3px;
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr 0.75fr 1.25fr;
+}
+
+.dnd5e-custom-counters-success-failure > input {
+    border: 0;
+    border-left: 1px dashed var(--color-border-light-tertiary);
+    border-radius: 0;
+}
+
+.dnd5e-custom-counters-success-failure > input:first-of-type {
+    border-right: 1px solid var(--color-border-light-tertiary);
+}
+
+.dnd5e-custom-counters-number > input {
+    grid-column-start: 4;
+}
+
